@@ -20,8 +20,6 @@ class FileManager:
         #=and Get the histogram and return them in dictionary form
         self.dict_hist={}
         self.dict_file={}
-    def SetDirPath(self, _dirpath):
-        self.dirpath=_dirpath
     def SetFileList(self, _filelist):
         for _path in _filelist:
             self.dict_file[_path]=None
@@ -57,7 +55,6 @@ class FileManager:
         return self.dict_hist
 if __name__ == '__main__':
     test=FileManager()
-    test.SetDirPath("BaiscCut/ZCand_Mass")
     test.SetFileList(["/data6/Users/jhchoi/SKFlatRunlog/2023_09_07_163518__649621__BasicTest__Era2017__TAMSA1/SingleMuon_periodB/output/hists_14.root"])
     test.OpenHist()
     mydict=test.ReturnHistDict()
