@@ -49,7 +49,10 @@ class FileManager:
                     _hpath='/'.join([_cname,_vname,_hname])
                     _h=_f.Get(_hpath)
                     _h.SetDirectory(0)
-                    self.dict_hist[_cname][_vname][_hname]=_h
+                    if _hname in self.dict_hist[_cname][_vname]: 
+                        self.dict_hist[_cname][_vname][_hname].Add(_h)
+                    else:
+                        self.dict_hist[_cname][_vname][_hname]=_h
         _f.Close()
     def ReturnHistDict(self):
         return self.dict_hist
