@@ -11,7 +11,7 @@ dict_conf={
         "names":["all","dR(#mu,Bmat.Jet)<0.4 in Z->#mu#mu","dR(#mu,Bmat.Jet)<0.4 in Z->ee"]
     },
     "electron_pt":{
-        "xname":"pT(#mu)",
+        "xname":"pT(e)",
         "yname":"events",
         "numelist":["InBmatJet_mm/electron_pt/DYJets","InBmatJet_ee/electron_pt/DYJets"],## paths of histograms 
         "color":[1,2,4],
@@ -148,25 +148,25 @@ dict_conf={
     "muon_charge":{
         "xname":"charge(#mu)",
         "yname":"events",
-        "numelist":["InBmatJet_mm/muon_charge/DYJets","InBmatJet_ee/muon_charge/DYJets"],
+        "numelist":["InBmatJet_b_ee/muon_charge/DYJets","InBmatJet_bbar_ee/muon_charge/DYJets"],
         "color":[1,2,4],
-        "deno":"InBmatJet/muon_charge/DYJets",
+        "deno":"InBmatJet_ee/muon_charge/DYJets",
         "setlogx":[False,True],
         "setlogy":[True,False],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
-        "names":["dR(#mu,Bmat.Jet)<0.4","dR(#mu,Bmat.Jet)<0.4 in Z->#mu#mu","dR(#mu,Bmat.Jet)<0.4 in Z->ee"]
+        "names":["dR(#mu,Bmat.Jet)<0.4, Z->ee","dR(#mu,Bmat.Jet)<0.4,b event, Z->ee","dR(#mu,Bmat.Jet)<0.4,#bar{b} event,Z->ee"]
     },
 
     "electron_charge":{
         "xname":"charge(e)",
         "yname":"events",
-        "numelist":["InBmatJet_mm/electron_charge/DYJets","InBmatJet_ee/electron_charge/DYJets"],
+        "numelist":["InBmatJet_b_mm/electron_charge/DYJets","InBmatJet_bbar_mm/electron_charge/DYJets"],
         "color":[1,2,4],
-        "deno":"InBmatJet/electron_charge/DYJets",
+        "deno":"InBmatJet_mm/electron_charge/DYJets",
         "setlogx":[False,True],
         "setlogy":[True,False],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
-        "names":["dR(e,Bmat.Jet)<0.4","dR(e,Bmat.Jet)<0.4 in Z->#mu#mu","dR(e,Bmat.Jet)<0.4 in Z->ee"]
+        "names":["dR(e,Bmat.Jet)<0.4, Z->#mu#mu","dR(e,Bmat.Jet)<0.4,b event, Z->#mu#mu","dR(e,Bmat.Jet)<0.4, #bar{b} event,Z->#mu#mu"]
     },
 
 
@@ -420,6 +420,19 @@ dict_conf={
         "setlogy":[True,False],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
         "names":["Not matched jets", "B-matched jet in b event", "B-matched jet in #bar{b} event"],
+    },
+
+    ##jet charge
+    "jet_charge":{ ## all jet / bmatjet
+        "xname":"jet_charge",
+        "yname":"events",
+        "deno":"BmatJet_b/jet_charge/DYJets",
+        "numelist":["BmatJet_bbar/jet_charge/DYJets"],
+        "color":[2,4],
+        "setlogx":[False,True],
+        "setlogy":[True,False],
+        #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
+        "names":["B-matched jet in b event", "B-matched jet in #bar{b} event"],
     },
     
 

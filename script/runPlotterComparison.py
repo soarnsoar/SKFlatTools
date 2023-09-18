@@ -195,10 +195,9 @@ class Drawer:
 
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
-                prefix="__"                
-                if setlogy==True:prefix="logy_"+prefix
-                if setlogx==True:prefix="logx_"+prefix
-                if (not setlogy) and (not setlogx): prefix=""
+                prefix="c__"                
+                if setlogy==True:prefix+="logy__"
+                if setlogx==True:prefix+="logx__"
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
                 canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
@@ -219,10 +218,11 @@ class Drawer:
 
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
-                prefix="__"
-                if setlogy==True:prefix="logy_"+prefix
-                if setlogx==True:prefix="logx_"+prefix
-                if (not setlogy) and (not setlogx): prefix=""
+                prefix="c__"
+                if setlogy==True:prefix+="logy__"
+                if setlogx==True:prefix+="logx__"
+
+                
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
                 canvas.SaveAs(self.outputdir+'/'+prefix+self.name+"__norm.pdf")
@@ -273,10 +273,10 @@ class Drawer:
                 canvas.Update()
                 pad1.cd()
                 #pad1.SetLogy()
-                prefix="__"
-                if setlogy==True:prefix="logy_"+prefix
-                if setlogx==True:prefix="logx_"+prefix
-                if (not setlogy) and (not setlogx): prefix=""
+                prefix="c__"
+                if setlogy==True:prefix+="logy__"
+                if setlogx==True:prefix+="logx__"
+
                 pad1.SetLogy(setlogy)
                 pad1.SetLogx(setlogx)
                 pad2.cd()
@@ -320,10 +320,10 @@ class Drawer:
                 canvas.Update()
                 pad1.cd()
                 #pad1.SetLogy()
-                prefix="__"
-                if setlogy==True:prefix="logy_"+prefix
-                if setlogx==True:prefix="logx_"+prefix
-                if (not setlogy) and (not setlogx): prefix=""
+                prefix="c__"
+                if setlogy==True:prefix+="logy__"
+                if setlogx==True:prefix+="logx__"
+
                 pad1.SetLogy(setlogy)
                 pad1.SetLogx(setlogx)
                 pad2.cd()
