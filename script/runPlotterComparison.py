@@ -14,14 +14,21 @@ import numpy as np
 import os
 from collections import OrderedDict
 DrawOption="E HIST"
+DrawOptionLegend="BR"
+x1=0.65
+y1=0.65
+x2=0.9
+y2=0.85
 class Drawer:
     def __init__(self,_hdict,_name):
         self.hdict=_hdict ##container of histogram-objects
         self.name=_name
         self.outputdir=""
-        self.lumi="-1"
+        self.lumi=""
         self.sqrtS="13"
-        
+        self.legend=ROOT.TLegend(x1,y1,x2,y2) #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
+        self.legend.SetBorderSize(1)
+        self.legend.SetLineColor(1)
     def GetRatio1Line(self):
         #TLine (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         x1=self.xbins[0]
@@ -36,6 +43,22 @@ class Drawer:
     def SetPlotConfig(self,_plotconf):
         self.plotconf=_plotconf
         self.xname=self.plotconf["xname"]
+        self.hnames=self.plotconf["names"]
+        if "legend" in self.plotconf:
+            if "R" in self.plotconf:
+                self.legend.SetX1(x1)
+                self.legend.SetX2(x2)
+            if "L" in self.plotconf:
+                self.legend.SetX1(x1-0.5)
+                self.legend.SetX2(x2-0.5)
+            if "T" in self.plotconf:
+                self.legend.SetY1(y1)
+                self.legend.SetY2(y2)
+            if "B" in self.plotconf:
+                self.legend.SetY1(y1-0.5)
+                self.legend.SetY2(y2-0.5)
+
+
         self.LoadHisto()
     def GetXBins(self,h):
         xbins=[]
@@ -46,12 +69,17 @@ class Drawer:
     def LoadHisto(self):
         self.deno=self.plotconf["deno"]
         self.h_deno = self.GetHistoByName(self.deno)
+        self.h_deno.GetXaxis().SetTitle(self.xname)
+        self.h_deno.SetTitle(self.hnames[0])
         ## --get xbin
         self.xbins=self.GetXBins(self.h_deno)
         self.numelist=self.plotconf["numelist"]
         self.h_numelist=[]
         for nume in self.numelist:
             self.h_numelist.append(self.GetHistoByName(nume).Clone())
+        for i in range(len(self.numelist)):
+            self.h_numelist[i].GetXaxis().SetTitle(self.xname)
+            self.h_numelist[i].SetTitle(self.hnames[i+1])
         self.h_ratiolist=[]
         self.GetRatio1Line()
         self.Rebin()
@@ -92,6 +120,7 @@ class Drawer:
         tdrstyle.setTDRStyle()
         #change the CMS_lumi variables (see CMS_lumi.py)
         CMS_lumi.lumi_13TeV = self.lumi+" fb^{-1}"
+        if self.lumi=="":CMS_lumi.lumi_13TeV=""
         CMS_lumi.writeExtraText = 1
         CMS_lumi.extraText = "Preliminary"
         CMS_lumi.lumi_sqrtS = self.sqrtS # used with iPeriod = 0, e.g. for simulation-only plots (default is an empty string)
@@ -124,7 +153,7 @@ class Drawer:
         L = 0.12*W_ref
         R = 0.04*W_ref
         
-        canvas = ROOT.TCanvas(self.name+'__'+self.xname,self.name+'__'+self.xname,50,50,W,H)
+        canvas = ROOT.TCanvas(self.name+'__',self.name+'__',50,50,W,H)
         canvas.SetFillColor(0)
         canvas.SetBorderMode(0)
         canvas.SetFrameFillStyle(0)
@@ -140,12 +169,15 @@ class Drawer:
         #self.h_deno.SetMarkerStyle(8)
         #self.h_deno.SetMarkerSize(0.5)
         self.h_deno.SetLineColor(1)
-        self.h_deno.Draw("E")
+        self.h_deno.Draw(DrawOption)
+        self.legend.AddEntry(self.h_deno)
         i_nume=0
         for h_nume in self.h_numelist:
             h_nume.SetLineColor(self.plotconf['color'][i_nume])
             h_nume.Draw(DrawOption+"sames")
+            self.legend.AddEntry(h_nume)
             i_nume+=1
+        self.legend.Draw(DrawOptionLegend)
         CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
         canvas.cd()
         canvas.Update()
@@ -167,7 +199,7 @@ class Drawer:
         ## --normalized plots
         self.h_deno_norm=self.h_deno.Clone()
         self.h_deno_norm.Scale(1/self.h_deno_norm.Integral())
-        self.h_deno_norm.Draw()
+        self.h_deno_norm.Draw(DrawOption)
         self.h_numelist_norm=[]
         for h_nume in self.h_numelist:
             h_nume_norm=h_nume.Clone()
@@ -175,7 +207,7 @@ class Drawer:
             self.h_numelist_norm.append(h_nume_norm.Clone())
         for h_nume_ratio in self.h_numelist_norm:
             h_nume_ratio.Draw(DrawOption+'sames')
-
+        self.legend.Draw(DrawOptionLegend)
 
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
@@ -205,6 +237,7 @@ class Drawer:
         self.h_deno.Draw(DrawOption)
         for h_nume in self.h_numelist:
             h_nume.Draw(DrawOption+"sames")
+        self.legend.Draw(DrawOptionLegend)
         canvas.cd()
         pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.3)
         pad2.SetTopMargin(0.02)
@@ -247,13 +280,17 @@ class Drawer:
                 canvas.SetLogx(0)
         ##--normalzed
         ##--ratio_norm
+        canvas.cd()
+        canvas.Update()        
         pad1.cd()
         self.h_ratiolist_norm=[]
-        for h_nume_ratio in self.h_numelist_norm:
+        for h_nume_norm in self.h_numelist_norm:
+            h_nume_ratio = h_nume_norm.Clone()/self.h_deno_norm
             self.h_ratiolist_norm.append(h_nume_ratio.Clone())
         self.h_deno_norm.Draw(DrawOption)
-        for h_nume_norm in self.h_numelist:
+        for h_nume_norm in self.h_numelist_norm:
             h_nume_norm.Draw(DrawOption+"sames")
+        self.legend.Draw(DrawOptionLegend)
         canvas.cd()
         pad2.cd()
         for h_ratio_norm in self.h_ratiolist_norm:
