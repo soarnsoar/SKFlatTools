@@ -3,7 +3,7 @@ dict_conf={
         "xname":"x",
         "yname":"events",
         "numelist":["gbToZb_b/x_b/DYJets","gbToZb/x_g/DYJets"],## paths of histograms 
-        "color":[2,4],
+        "color":[1,2,4],
         "deno":"gbToZb_bbar/x_b/DYJets",
         "setlogx":[True,False],
         "setlogy":[True,False],
@@ -31,7 +31,8 @@ dict_conf={
         "deno":"gbToZb_b/Q2/DYJets",
         "setlogx":[True,False],
         "setlogy":[True,False],
-        "names":["b event","#bar{b} event"]
+        "rebin":[1.,3.,6.,9.,30.,60.,90.,300.,600.,900.,3000.,6000.,9000.,30000.],
+        "names":["b event","#bar{b} event"],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0]
     },
 

@@ -15,10 +15,7 @@ import os
 from collections import OrderedDict
 DrawOption="E HIST"
 DrawOptionLegend="BR"
-x1=0.65
-y1=0.65
-x2=0.9
-y2=0.85
+
 class Drawer:
     def __init__(self,_hdict,_name):
         self.hdict=_hdict ##container of histogram-objects
@@ -26,7 +23,7 @@ class Drawer:
         self.outputdir=""
         self.lumi=""
         self.sqrtS="13"
-        self.legend=ROOT.TLegend(x1,y1,x2,y2) #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
+        self.legend=ROOT.TLegend(0,0,1,1) #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         self.legend.SetBorderSize(1)
         self.legend.SetLineColor(1)
     def GetRatio1Line(self):
@@ -44,19 +41,28 @@ class Drawer:
         self.plotconf=_plotconf
         self.xname=self.plotconf["xname"]
         self.hnames=self.plotconf["names"]
+
+        ##--legend--##
+        x1=0.7
+        y1=0.7
+        x2=0.95
+        y2=0.85
+        self.nhisto=1+len(self.plotconf["numelist"])
+        this_option="RT"
         if "legend" in self.plotconf:
-            if "R" in self.plotconf:
-                self.legend.SetX1(x1)
-                self.legend.SetX2(x2)
-            if "L" in self.plotconf:
-                self.legend.SetX1(x1-0.5)
-                self.legend.SetX2(x2-0.5)
-            if "T" in self.plotconf:
-                self.legend.SetY1(y1)
-                self.legend.SetY2(y2)
-            if "B" in self.plotconf:
-                self.legend.SetY1(y1-0.5)
-                self.legend.SetY2(y2-0.5)
+            this_option=self.plotconf["legend"]
+        if "R" in this_option:
+            self.legend.SetX1(x1)
+            self.legend.SetX2(x2)
+        if "L" in this_option:
+            self.legend.SetX1(x1-0.5)
+            self.legend.SetX2(x2-0.5)
+        if "T" in this_option:
+            self.legend.SetY1(y2-self.nhisto*0.05)
+            self.legend.SetY2(y2)
+        if "B" in this_option:
+            self.legend.SetY1(1-y2)
+            self.legend.SetY2(1-y2-self.nhisto*0.05)
 
 
         self.LoadHisto()
@@ -86,10 +92,12 @@ class Drawer:
 
     def Rebin(self):
         if not "rebin" in self.plotconf: return
-        print self.xbins
+        #print list(self.xbins)
         self.xbins=np.array(self.plotconf["rebin"])
-        print self.xbins
-        self.h_deno=self.h_deno.Rebin(len(self.xbins)-1,self.h_deno.GetName()+"_new" ,self.xbins)        
+        #print list(self.xbins)
+        self.h_deno=self.h_deno.Rebin(len(self.xbins)-1,\
+                                      self.h_deno.GetName()+"_new" ,\
+                                      self.xbins)        
         for i in range(len(self.h_numelist)):
             self.h_numelist[i]=self.h_numelist[i].Rebin(len(self.xbins)-1,self.h_numelist[i].GetName()+"_new" ,self.xbins)        
         ##---Rescale by bin width
@@ -168,12 +176,12 @@ class Drawer:
 
         #self.h_deno.SetMarkerStyle(8)
         #self.h_deno.SetMarkerSize(0.5)
-        self.h_deno.SetLineColor(1)
+        self.h_deno.SetLineColor(self.plotconf['color'][0])
         self.h_deno.Draw(DrawOption)
         self.legend.AddEntry(self.h_deno)
         i_nume=0
         for h_nume in self.h_numelist:
-            h_nume.SetLineColor(self.plotconf['color'][i_nume])
+            h_nume.SetLineColor(self.plotconf['color'][i_nume+1])
             h_nume.Draw(DrawOption+"sames")
             self.legend.AddEntry(h_nume)
             i_nume+=1
@@ -366,6 +374,7 @@ if __name__ == '__main__':
     
     ##----Check Histogram List and Check xmin xmax----#
     for plot in dict_conf:
+        print plot
         drawer=Drawer(hdict,plot)
         drawer.SetPlotConfig(dict_conf[plot])
         drawer.outputdir=args.outputdir
