@@ -90,6 +90,17 @@ class Drawer:
         self.h_ratiolist=[]
         self.GetRatio1Line()
         self.Rebin()
+        ##--get ymax
+        self.ymax=-sys.maxsize()
+        self.ymin=sys.maxsize()
+        for h in self.numelist+[self.h_deno]:
+            _ymax=h.GetMaximum()
+            if _ymax > self.ymax : self.ymax=_ymax
+            if _ymin > self.ymin : self.ymin=_ymin
+        
+        self.h_deno.SetMaximum(self.ymax*1.1)
+        for i in range(len(self.numelist)):
+            self.numelist[i].SetMaximum(self.ymax*1.1)
 
     def Rebin(self):
         if not "rebin" in self.plotconf: return
