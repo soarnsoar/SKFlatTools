@@ -26,6 +26,7 @@ class Drawer:
         self.legend=ROOT.TLegend(0,0,1,1) #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         self.legend.SetBorderSize(1)
         self.legend.SetLineColor(1)
+        
     def GetRatio1Line(self):
         #TLine (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         x1=self.xbins[0]
@@ -122,6 +123,7 @@ class Drawer:
     def GetHistoByName(self,_name):
         nameparse=_name.split("/")
         c, v, p = nameparse[0], nameparse[1], nameparse[2] 
+        print c,v,p
         return self.hdict[c][v][p]
     def run(self):
         ##---------From TDR style ---------##
@@ -373,10 +375,15 @@ if __name__ == '__main__':
     hdict=p.GetHistFromFileList([args.inputfile])
     
     ##----Check Histogram List and Check xmin xmax----#
-    for plot in dict_conf:
+    nplots=len(dict_conf)
+    groupsize=10
+    for i,plot in enumerate(dict_conf):
         print plot
         drawer=Drawer(hdict,plot)
         drawer.SetPlotConfig(dict_conf[plot])
         drawer.outputdir=args.outputdir
+        if(nplots>groupsize):
+            i_group=int(i/groupsize)
+            drawer.outputdir=drawer.outputdir+"/"+str(i_group)+"/"
         drawer.run()
             
