@@ -15,6 +15,8 @@ import os
 from collections import OrderedDict
 DrawOption="E HIST"
 DrawOptionLegend="BR"
+ymaxratio=1.5
+
 
 class Drawer:
     def __init__(self,_hdict,_name):
@@ -49,19 +51,19 @@ class Drawer:
         x2=0.95
         y2=0.85
         self.nhisto=1+len(self.plotconf["numelist"])
-        this_option="RT"
+        self.legend_pos="RT"
         if "legend" in self.plotconf:
-            this_option=self.plotconf["legend"]
-        if "R" in this_option:
+            self.legend_pos=self.plotconf["legend"]
+        if "R" in self.legend_pos:
             self.legend.SetX1(x1)
             self.legend.SetX2(x2)
-        if "L" in this_option:
+        if "L" in self.legend_pos:
             self.legend.SetX1(x1-0.5)
             self.legend.SetX2(x2-0.5)
-        if "T" in this_option:
+        if "T" in self.legend_pos:
             self.legend.SetY1(y2-self.nhisto*0.05)
             self.legend.SetY2(y2)
-        if "B" in this_option:
+        if "B" in self.legend_pos:
             self.legend.SetY1(1-y2)
             self.legend.SetY2(1-y2-self.nhisto*0.05)
 
@@ -90,17 +92,34 @@ class Drawer:
         self.h_ratiolist=[]
         self.GetRatio1Line()
         self.Rebin()
+    def GetMinMaxY(self,isNorm=False):
         ##--get ymax
-        self.ymax=-sys.maxsize()
-        self.ymin=sys.maxsize()
-        for h in self.numelist+[self.h_deno]:
+        self.ymax=-sys.maxsize
+        self.ymin=sys.maxsize
+        self.ymax_norm=-sys.maxsize #for norm plots
+        self.ymin_norm=sys.maxsize
+        for h in self.h_numelist+[self.h_deno]:
             _ymax=h.GetMaximum()
+            _ymin=h.GetMinimum()
+            _ymax_norm=h.GetMaximum()/h.Integral()
+            _ymin_norm=h.GetMinimum()/h.Integral()
             if _ymax > self.ymax : self.ymax=_ymax
-            if _ymin > self.ymin : self.ymin=_ymin
-        
-        self.h_deno.SetMaximum(self.ymax*1.1)
-        for i in range(len(self.numelist)):
-            self.numelist[i].SetMaximum(self.ymax*1.1)
+            if _ymin < self.ymin : self.ymin=_ymin
+            if _ymax_norm > self.ymax_norm : self.ymax_norm=_ymax_norm
+            if _ymin_norm < self.ymin_norm : self.ymin_norm=_ymin_norm
+        print "ymax",self.ymax
+        print "ymax_norm",self.ymax_norm
+    def SetMaxY(self,_ratio):
+
+        self.h_deno.SetMaximum(self.ymax*_ratio)
+        for i in range(len(self.h_numelist)):
+            self.h_numelist[i].SetMaximum(self.ymax*_ratio)
+
+    def SetMaxYnorm(self,_ratio):
+
+        self.h_deno_norm.SetMaximum(self.ymax_norm*_ratio)
+        for i in range(len(self.h_numelist_norm)):
+            self.h_numelist_norm[i].SetMaximum(self.ymax_norm*_ratio)
 
     def Rebin(self):
         if not "rebin" in self.plotconf: return
@@ -137,6 +156,11 @@ class Drawer:
         print c,v,p
         return self.hdict[c][v][p]
     def run(self):
+        self.GetMinMaxY()
+        ##--declare
+        self.h_deno_norm=self.h_deno.Clone()
+        self.h_numelist_norm=[]
+
         ##---------From TDR style ---------##
         tdrstyle.setTDRStyle()
         #change the CMS_lumi variables (see CMS_lumi.py)
@@ -148,7 +172,6 @@ class Drawer:
         iPos = 11
         CMS_lumi.relPosX    = 0.08
         if( iPos==0 ): CMS_lumi.relPosX = 0.12
-        
         H_ref = 600; 
         W_ref = 800; 
         W = W_ref
@@ -208,9 +231,18 @@ class Drawer:
 
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
-                prefix="c__"                
-                if setlogy==True:prefix+="logy__"
-                if setlogx==True:prefix+="logx__"
+                CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
+                canvas.cd()
+                canvas.Update()
+
+                prefix="c"                
+                if setlogy==True:
+                    prefix+="logy"
+                    self.SetMaxY(1000)
+                else:
+                    self.SetMaxY(1.5)
+                if setlogx==True:prefix+="logx"
+                prefix+="__"
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
                 canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
@@ -220,6 +252,7 @@ class Drawer:
         self.h_deno_norm=self.h_deno.Clone()
         self.h_deno_norm.Scale(1/self.h_deno_norm.Integral())
         self.h_deno_norm.Draw(DrawOption)
+        
         self.h_numelist_norm=[]
         for h_nume in self.h_numelist:
             h_nume_norm=h_nume.Clone()
@@ -228,17 +261,25 @@ class Drawer:
         for h_nume_ratio in self.h_numelist_norm:
             h_nume_ratio.Draw(DrawOption+'sames')
         self.legend.Draw(DrawOptionLegend)
-
+        
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
-                prefix="c__"
-                if setlogy==True:prefix+="logy__"
-                if setlogx==True:prefix+="logx__"
+                CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
+                canvas.cd()
+                canvas.Update()
 
+                prefix="cnorm_"
+                if setlogy==True:
+                    prefix+="logy"
+                    self.SetMaxYnorm(1000)
+                else:
+                    self.SetMaxYnorm(1.5)
+                if setlogx==True:prefix+="logx"
+                prefix+="__"
                 
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+"__norm.pdf")
+                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
         ##--[END]Normalize
@@ -255,6 +296,7 @@ class Drawer:
         pad1.SetGridx()
         pad1.Draw()
         pad1.cd()
+
         self.h_deno.Draw(DrawOption)
         for h_nume in self.h_numelist:
             h_nume.Draw(DrawOption+"sames")
@@ -266,6 +308,7 @@ class Drawer:
         pad2.SetGridx()
         pad2.Draw()
         pad2.cd()
+
         ##TODO::handle this with input args
         for h_ratio in self.h_ratiolist:
             h_ratio.SetMinimum(0.5)        
@@ -277,30 +320,38 @@ class Drawer:
             h_ratio.GetXaxis().SetTitleOffset(1)
             h_ratio.GetXaxis().SetTitleSize(0.09)
             h_ratio.Draw(DrawOption+'sames')
-        self.line1.Draw('sames')
+        self.line1.Draw('sames')        
         CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
-
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
                 canvas.cd()
                 canvas.Update()
                 pad1.cd()
+                CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
                 #pad1.SetLogy()
-                prefix="c__"
-                if setlogy==True:prefix+="logy__"
-                if setlogx==True:prefix+="logx__"
-
+                prefix="cratio"
+                if setlogy==True:
+                    prefix+="logy"
+                    self.SetMaxY(1000)
+                else:
+                    self.SetMaxY(1.5)
+                if setlogx==True:prefix+="logx"
+                prefix+="__"
                 pad1.SetLogy(setlogy)
                 pad1.SetLogx(setlogx)
                 pad2.cd()
                 pad2.SetLogx(setlogx)
+                
+
+
                 canvas.cd()
                 canvas.Update()
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+"_ratio.pdf")
+                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
         ##--normalzed
         ##--ratio_norm
+
         canvas.cd()
         canvas.Update()        
         pad1.cd()
@@ -314,7 +365,8 @@ class Drawer:
         self.legend.Draw(DrawOptionLegend)
         canvas.cd()
         pad2.cd()
-        for h_ratio_norm in self.h_ratiolist_norm:
+
+        for i,h_ratio_norm in enumerate(self.h_ratiolist_norm):
             h_ratio_norm.SetMinimum(0.5)        
             h_ratio_norm.SetMaximum(1.5)
             h_ratio_norm.GetYaxis().SetLabelSize(0.1)
@@ -323,8 +375,11 @@ class Drawer:
             #self.h_ratio_norm.GetXaxis().SetTitle(self.xtitle)
             h_ratio_norm.GetXaxis().SetTitleOffset(1)
             h_ratio_norm.GetXaxis().SetTitleSize(0.09)
-            h_ratio_norm.Draw(DrawOption+'sames')
-        self.line1.Draw(DrawOption+'sames')
+            if i==0:
+                h_ratio_norm.Draw(DrawOption)
+            else:
+                h_ratio_norm.Draw(DrawOption+'sames')
+            self.line1.Draw('sames')        
         CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
 
         for setlogx in self.plotconf["setlogx"]:
@@ -332,18 +387,23 @@ class Drawer:
                 canvas.cd()
                 canvas.Update()
                 pad1.cd()
+                CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
                 #pad1.SetLogy()
-                prefix="c__"
-                if setlogy==True:prefix+="logy__"
-                if setlogx==True:prefix+="logx__"
-
+                prefix="crationorm"
+                if setlogy==True:
+                    prefix+="logy"
+                    self.SetMaxYnorm(1000)
+                else:
+                    self.SetMaxYnorm(1.5)
+                if setlogx==True:prefix+="logx"
+                prefix+="__"
                 pad1.SetLogy(setlogy)
                 pad1.SetLogx(setlogx)
                 pad2.cd()
                 pad2.SetLogx(setlogx)
                 canvas.cd()
                 canvas.Update()
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+"_ratio__norm.pdf")
+                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
 

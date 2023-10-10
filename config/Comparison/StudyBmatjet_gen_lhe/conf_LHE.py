@@ -12,7 +12,7 @@ dict_conf={
     },
 
     "log_x_b_bbar_g":{
-        "xname":"x",
+        "xname":"log_{10}(x)",
         "yname":"events",
         "numelist":["gbToZb_b/logx_b/DYJets","gbToZb/logx_g/DYJets"],## paths of histograms 
         "color":[1,2,4],
@@ -20,7 +20,8 @@ dict_conf={
         "setlogx":[False],
         "setlogy":[True,False],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
-        "names":["b","#bar{b}","gluon"]
+        "names":["b","#bar{b}","gluon"],
+        #"legend":"LT"
     },
 
     "x_b_bbar":{
@@ -36,7 +37,7 @@ dict_conf={
     },
 
     "log_x_b_bbar":{
-        "xname":"x",
+        "xname":"log_{10}x",
         "yname":"events",
         "numelist":["gbToZb_b/logx_b/DYJets"],## paths of histograms 
         "color":[2,4],
@@ -44,7 +45,8 @@ dict_conf={
         "setlogx":[False],
         "setlogy":[True,False],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
-        "names":["b","#bar{b}"]
+        "names":["b","#bar{b}"],
+        #"legend":"LT"
     },
 
     "Q2":{
@@ -61,7 +63,7 @@ dict_conf={
     },
 
     "logQ2":{
-        "xname":"Q^{2}",
+        "xname":"log_{10}(Q^{2})",
         "yname":"events",
         "numelist":["gbToZb_bbar/logQ2/DYJets"],## paths of histograms 
         "color":[2,4],
@@ -71,6 +73,7 @@ dict_conf={
         #"rebin":[1.,3.,6.,9.,30.,60.,90.,300.,600.,900.,3000.,6000.,9000.,30000.],
         "names":["b event","#bar{b} event"],
         #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0]
+        #"legend":"LT"
     },
 
 }
