@@ -111,6 +111,7 @@ for suffix in dict_suffix:
             "deno":prefix+"bevt_"+zll+"_"+Lep+"Plus"+addcut+"/"+lep+"_P_jetrestf/"+samplename+"",
             "setlogx":[False,True],
             "setlogy":[True,False],
+            "rebin":[ i*0.1 for i in range(100)],
             #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
             "names":[l+"^{+}, b event in Z->"+zllgreek+"",l+"^{-}, bevent in Z->"+zllgreek+""]
         }
@@ -123,6 +124,7 @@ for suffix in dict_suffix:
             "deno":prefix+"bevt_"+zll+"_"+Lep+"Plus"+addcut+"/"+lep+"_dRbmatj/"+samplename,
             "setlogx":[False,True],
             "setlogy":[True,False],
+            "rebin":[ i*0.1 for i in range(50)],
             #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
             "names":[l+"^{+}, b event in Z->"+zll+"",l+"^{-}, bevent in Z->"+zll+""]
         }
@@ -166,6 +168,7 @@ for suffix in dict_suffix:
             "deno":prefix+"bevt_"+zll+"_"+Lep+"Plus"+addcut+"/"+lep+"_"+x+"/"+samplename,
             "setlogx":[False,True],
             "setlogy":[True,False],
+            "rebin":[ -5.+i*(7./50.) for i in range(50)],
             #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
             "names":[l+"^{+}, b event in Z->"+zll+"",l+"^{-}, bevent in Z->"+zll+""]
         }
@@ -182,6 +185,7 @@ for suffix in dict_suffix:
             "deno":prefix+"bevt_"+zll+"_"+Lep+"Plus"+addcut+"/"+lep+"_"+x+"/"+samplename,
             "setlogx":[False,True],
             "setlogy":[True,False],
+            "rebin":[ -5.+i*(7./50.) for i in range(50)],
             #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
             "names":[l+"^{+}, b event in Z->"+zll+"",l+"^{-}, bevent in Z->"+zll+""]
         }
@@ -198,6 +202,7 @@ for suffix in dict_suffix:
                 "deno":prefix+"bevt_"+zll+"_"+Lep+"Plus"+addcut+"/"+lep+"_"+x+"/"+samplename,
                 "setlogx":[False,True],
                 "setlogy":[True,False],
+                "rebin":[ -5.+i*(7./50.) for i in range(50)],
                 #"rebin":[0,10**-3,3*10**-3,10**-2,3*10**-2,10**-1,3*10**-1,10**0],
                 "names":[l+"^{+}, b event in Z->"+zll+"",l+"^{-}, bevent in Z->"+zll+""]
             }
