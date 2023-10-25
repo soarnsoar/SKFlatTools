@@ -28,7 +28,7 @@ class Drawer:
         self.legend=ROOT.TLegend(0,0,1,1) #TLegend (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         self.legend.SetBorderSize(1)
         self.legend.SetLineColor(1)
-        
+        self.nplots=0
     def GetRatio1Line(self):
         #TLine (Double_t x1, Double_t y1, Double_t x2, Double_t y2)
         x1=self.xbins[0]
@@ -43,10 +43,11 @@ class Drawer:
     def SetPlotConfig(self,_plotconf):
         self.plotconf=_plotconf
         self.xname=self.plotconf["xname"]
+        self.xname=self.plotconf["yname"]
         self.hnames=self.plotconf["names"]
 
         ##--legend--##
-        x1=0.7
+        x1=0.65
         y1=0.7
         x2=0.95
         y2=0.85
@@ -79,6 +80,7 @@ class Drawer:
         self.deno=self.plotconf["deno"]
         self.h_deno = self.GetHistoByName(self.deno)
         self.h_deno.GetXaxis().SetTitle(self.xname)
+        self.h_deno.GetYaxis().SetTitle(self.yname)
         self.h_deno.SetTitle(self.hnames[0])
         ## --get xbin
         self.xbins=self.GetXBins(self.h_deno)
@@ -88,6 +90,7 @@ class Drawer:
             self.h_numelist.append(self.GetHistoByName(nume).Clone())
         for i in range(len(self.numelist)):
             self.h_numelist[i].GetXaxis().SetTitle(self.xname)
+            self.h_numelist[i].GetYaxis().SetTitle(self.yname)
             self.h_numelist[i].SetTitle(self.hnames[i+1])
         self.h_ratiolist=[]
         self.GetRatio1Line()
@@ -228,6 +231,9 @@ class Drawer:
         canvas.RedrawAxis()
 
         os.system("mkdir -p "+self.outputdir)
+        if self.nplots>10:
+            
+            os.system("mkdir -p "+self.outputdir+"/"+self.name.split("__")[0])
 
         for setlogx in self.plotconf["setlogx"]:
             for setlogy in self.plotconf["setlogy"]:
@@ -245,7 +251,10 @@ class Drawer:
                 prefix+="__"
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                if nplots>10:
+                    canvas.SaveAs(self.outputdir+'/'+self.name.split("__")[0]+"/"+prefix+self.name+".pdf")
+                else:
+                    canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
         ## --normalized plots
@@ -279,7 +288,12 @@ class Drawer:
                 
                 canvas.SetLogy(setlogy)
                 canvas.SetLogx(setlogx)
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                #canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                if nplots>10:
+                    canvas.SaveAs(self.outputdir+'/'+self.name.split("__")[0]+"/"+prefix+self.name+".pdf")
+                else:
+                    canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
         ##--[END]Normalize
@@ -346,7 +360,11 @@ class Drawer:
 
                 canvas.cd()
                 canvas.Update()
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                #canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                if nplots>10:
+                    canvas.SaveAs(self.outputdir+'/'+self.name.split("__")[0]+"/"+prefix+self.name+".pdf")
+                else:
+                    canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
         ##--normalzed
@@ -403,7 +421,12 @@ class Drawer:
                 pad2.SetLogx(setlogx)
                 canvas.cd()
                 canvas.Update()
-                canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                #canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+                if nplots>10:
+                    canvas.SaveAs(self.outputdir+'/'+self.name.split("__")[0]+"/"+prefix+self.name+".pdf")
+                else:
+                    canvas.SaveAs(self.outputdir+'/'+prefix+self.name+".pdf")
+
                 canvas.SetLogy(0)
                 canvas.SetLogx(0)
 
@@ -453,8 +476,9 @@ if __name__ == '__main__':
         drawer=Drawer(hdict,plot)
         drawer.SetPlotConfig(dict_conf[plot])
         drawer.outputdir=args.outputdir
-        if(nplots>groupsize):
-            i_group=int(i/groupsize)
-            drawer.outputdir=drawer.outputdir+"/"+str(i_group)+"/"
+        drawer.nplots=nplots
+        #if(nplots>groupsize):
+            #i_group=int(i/groupsize)
+            #drawer.outputdir=drawer.outputdir+"/"+str(i_group)+"/"
         drawer.run()
             
