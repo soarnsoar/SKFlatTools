@@ -301,7 +301,8 @@ class Drawer:
 
         ##--ratioplot
         for h_nume in self.h_numelist:
-            h_ratio=h_nume/self.h_deno
+            h_ratio=h_nume.Clone()
+            h_ratio.Divide(self.h_deno)
             self.h_ratiolist.append(h_ratio)
         ##
         pad1=ROOT.TPad("pad1", "pad1", 0, 0.3, 1, 1) ##x1,y1,x2,y2
@@ -375,7 +376,8 @@ class Drawer:
         pad1.cd()
         self.h_ratiolist_norm=[]
         for h_nume_norm in self.h_numelist_norm:
-            h_nume_ratio = h_nume_norm.Clone()/self.h_deno_norm
+            h_nume_ratio = h_nume_norm.Clone()
+            h_nume_ratio.Divide(self.h_deno_norm)
             self.h_ratiolist_norm.append(h_nume_ratio.Clone())
         self.h_deno_norm.Draw(DrawOption)
         for h_nume_norm in self.h_numelist_norm:
