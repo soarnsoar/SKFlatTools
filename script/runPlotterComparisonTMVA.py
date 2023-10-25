@@ -3,7 +3,7 @@
 ##For Comparison. Denominator0 numerator1,2,3...
 ##
 ##===================
-from Plotter import Plotter
+from PlotterTMVA import Plotter
 from glob import glob
 import CMS_lumi, tdrstyle
 import array
@@ -155,9 +155,9 @@ class Drawer:
 
     def GetHistoByName(self,_name):
         nameparse=_name.split("/")
-        c, v, p = nameparse[0], nameparse[1], nameparse[2] 
-        print c,v,p
-        return self.hdict[c][v][p]
+        c, v, d, p = nameparse[0], nameparse[1], nameparse[2], nameparse[3] 
+        print c,v,d, p
+        return self.hdict[c][v][d][p]
     def run(self):
         self.GetMinMaxY()
         ##--declare
