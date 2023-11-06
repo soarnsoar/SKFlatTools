@@ -29,13 +29,23 @@ class Drawer:
     def CombineHist(self):
         ##---Combine Histos
         self.chdict=OrderedDict()
+        print list(self.hdict)
         for p in self.pdict:
             subidx=0
+            print "combined proc->",p
             for subp in self.pdict[p]['procs']: ## subp=TTLL TTLJ will be combined to TTtotal
+                print "sub proc->",subp
                 if subidx==0:
-                    self.chdict[p]=self.hdict[subp].Clone()
+                    if subp in self.hdict:
+                        self.chdict[p]=self.hdict[subp].Clone()
+                    else:
+                        continue
                 else:
-                    self.chdict[p].Add(self.hdict[subp])
+
+                    if subp in self.hdict:
+                        self.chdict[p].Add(self.hdict[subp])
+                    else:
+                        continue
                 subidx+=1
 
         ##---Stack Histos
@@ -49,18 +59,24 @@ class Drawer:
             ##--Set MC histo MC
             if mcidx==0:
                 print 'stack',p
-                self.hmc=self.chdict[p].Clone()
-                self.hstack=ROOT.THStack(self.prefix+'__'+self.xname,\
-                                           self.prefix+'__'+self.xname)
+                if p in self.chdict:
+                    print self.chdict[p]
+                    self.hmc=self.chdict[p].Clone()
+                    self.hstack=ROOT.THStack(self.prefix+'__'+self.xname,\
+                                             self.prefix+'__'+self.xname)
                 
-                self.chdict[p].SetFillColor(self.pdict[p]['color'])
-                self.hstack.Add(self.chdict[p])
+                    self.chdict[p].SetFillColor(self.pdict[p]['color'])
+                    self.hstack.Add(self.chdict[p])
+                else:
+                    continue
             else:
-                print 'stack',p
-                self.hmc.Add(self.chdict[p])
-                self.chdict[p].SetFillColor(self.pdict[p]['color'])
-                self.hstack.Add(self.chdict[p])
-            
+                if p in self.chdict:
+                    print 'stack',p
+                    self.hmc.Add(self.chdict[p])
+                    self.chdict[p].SetFillColor(self.pdict[p]['color'])
+                    self.hstack.Add(self.chdict[p])
+                else:
+                    continue
             mcidx+=1
 
 
@@ -169,7 +185,8 @@ class Drawer:
         canvas.SaveAs(self.outputdir+'/'+self.prefix+self.xname+"_log.pdf")
         canvas.SetLogy(0)
         ##--ratioplot
-        self.hratio=self.hdata/self.hmc
+        self.hratio=self.hdata.Clone()
+        self.hratio.Divide(self.hmc)
         ##
         pad1=ROOT.TPad("pad1", "pad1", 0, 0.3, 1, 1) ##x1,y1,x2,y2
         pad1.SetTopMargin(0.1)
@@ -247,7 +264,7 @@ if __name__ == '__main__':
     xmax=-sys.maxsize
     for c in hdict:
         for v in hdict[c]:
-            #print c,v
+            print c,v
             drawer=Drawer(hdict[c][v],procconf,'',c,v)
             #    def SetNames(self,title,prefix,xname,yname):
             drawer.SetPlotConfig(plotconf)
