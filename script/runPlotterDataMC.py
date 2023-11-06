@@ -12,78 +12,82 @@ import argparse
 import sys
 import numpy as np
 import os
+from copy import deepcopy
 from collections import OrderedDict
+import os, psutil
+process = psutil.Process()
+print(process.memory_info().rss)  # in bytes 
+
 
 class Drawer:
-    def __init__(self,_hdict, _pdict,title,prefix,variablename):
+    def SetHistDict(self,_hdict):
         self.hdict=_hdict ##container of histogram-objects
+    def SetProcDict(self,_pdict):
         self.pdict=_pdict ##process info
+    def SetInputpath(self,_inputpath):
+        self.inputpath=_inputpath
+    def init(self,title,prefix,variablename):
+        self.tfile=ROOT.TFile.Open(self.inputpath)
         self.ymin=sys.maxsize
         self.ymax=-sys.maxsize
         self.xbins=[]
         self.SetNames(title,prefix,variablename)
+        self.SetSubprocs()
+        self.InitEmptyHists()
         self.CombineHist()
         self.SetMinMaxBins()
         self.GetRatio1Line()
-    
+    def SetSubprocs(self):
+        #procs
+        self.subplist=[]
+        for p in self.pdict:
+            _subplist=self.pdict[p]['procs']
+            self.subplist+=_subplist
+        self.subplist=list(set(self.subplist))
+    def InitEmptyHists(self):
+        first=list(self.hdict)[0]
+        self.hempty=self.tfile.Get(self.hdict[first]).Clone("empty")
+        self.hempty.Reset()
+        for subp in self.subplist:
+            if not (subp in self.hdict):
+                self.hdict[subp]=self.hempty.Clone()
     def CombineHist(self):
+        
         ##---Combine Histos
         self.chdict=OrderedDict()
-        print list(self.hdict)
+        self.hmc=self.hempty.Clone("hmc")
+        self.hdata=self.hempty.Clone("hdata")
+        self.hratio=self.hempty.Clone("hratio")
+        self.hstack=ROOT.THStack("hstack","hstack")
+
         for p in self.pdict:
-            subidx=0
-            print "combined proc->",p
+            self.chdict[p]=self.hempty.Clone()
             for subp in self.pdict[p]['procs']: ## subp=TTLL TTLJ will be combined to TTtotal
-                print "sub proc->",subp
-                if subidx==0:
-                    if subp in self.hdict:
-                        self.chdict[p]=self.hdict[subp].Clone()
-                    else:
-                        continue
-                else:
+                #print "self.tfile.Get(self.hdict[subp])",type(self.tfile.Get(self.hdict[subp]))
 
-                    if subp in self.hdict:
-                        self.chdict[p].Add(self.hdict[subp])
-                    else:
-                        continue
-                subidx+=1
-
+                if not "TH1D" in str(type(self.tfile.Get(self.hdict[subp]))) : continue
+                self.chdict[p].Add(self.tfile.Get(self.hdict[subp]))
         ##---Stack Histos
-        mcidx=0
+
         for p in self.pdict:
             ##--Set data histo
             if 'isData' in self.pdict[p]:
                 if self.pdict[p]['isData']: 
-                    self.hdata=self.chdict[p].Clone()
-                    continue
-            ##--Set MC histo MC
-            if mcidx==0:
-                print 'stack',p
-                if p in self.chdict:
-                    print self.chdict[p]
-                    self.hmc=self.chdict[p].Clone()
-                    self.hstack=ROOT.THStack(self.prefix+'__'+self.xname,\
-                                             self.prefix+'__'+self.xname)
-                
-                    self.chdict[p].SetFillColor(self.pdict[p]['color'])
-                    self.hstack.Add(self.chdict[p])
-                else:
+                    self.hdata=self.chdict[p]
                     continue
             else:
-                if p in self.chdict:
-                    print 'stack',p
-                    self.hmc.Add(self.chdict[p])
-                    self.chdict[p].SetFillColor(self.pdict[p]['color'])
-                    self.hstack.Add(self.chdict[p])
-                else:
-                    continue
-            mcidx+=1
+                self.hmc.Add(self.chdict[p])
+                self.chdict[p].SetFillColor(self.pdict[p]['color'])
+                self.hstack.Add(self.chdict[p])
+
+
 
 
 
 
 
     def SetMinMaxBins(self):
+        
         _id=0
         for p in self.chdict:
             if _id==0: 
@@ -95,6 +99,8 @@ class Drawer:
             if ymin_<self.ymin:self.ymin=ymin_
             if ymax_>self.ymax:self.ymax=ymax_
             _id+=1
+        
+        
         for _h in [self.hmc,self.hdata]:
             ymin_=_h.GetMinimum()
             ymax_=_h.GetMaximum()
@@ -157,17 +163,17 @@ class Drawer:
         L = 0.12*W_ref
         R = 0.04*W_ref
         
-        canvas = ROOT.TCanvas(self.prefix+'__'+self.xname,self.prefix+'__'+self.xname,50,50,W,H)
-        canvas.SetFillColor(0)
-        canvas.SetBorderMode(0)
-        canvas.SetFrameFillStyle(0)
-        canvas.SetFrameBorderMode(0)
-        canvas.SetLeftMargin( L/W )
-        canvas.SetRightMargin( R/W )
-        canvas.SetTopMargin( T/H )
-        canvas.SetBottomMargin( B/H )
-        canvas.SetTickx(0)
-        canvas.SetTicky(0)
+        self.canvas = ROOT.TCanvas(self.prefix+'__'+self.xname,self.prefix+'__'+self.xname,50,50,W,H)
+        self.canvas.SetFillColor(0)
+        self.canvas.SetBorderMode(0)
+        self.canvas.SetFrameFillStyle(0)
+        self.canvas.SetFrameBorderMode(0)
+        self.canvas.SetLeftMargin( L/W )
+        self.canvas.SetRightMargin( R/W )
+        self.canvas.SetTopMargin( T/H )
+        self.canvas.SetBottomMargin( B/H )
+        self.canvas.SetTickx(0)
+        self.canvas.SetTicky(0)
         
 
         self.hdata.SetMarkerStyle(8)
@@ -176,34 +182,34 @@ class Drawer:
         self.hstack.Draw('hist')
         self.hdata.Draw('E1sames')
 
-        CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
-        canvas.cd()
-        canvas.Update()
-        canvas.RedrawAxis()
-        canvas.SaveAs(self.outputdir+'/'+self.prefix+self.xname+".pdf")
-        canvas.SetLogy()
-        canvas.SaveAs(self.outputdir+'/'+self.prefix+self.xname+"_log.pdf")
-        canvas.SetLogy(0)
+        CMS_lumi.CMS_lumi(self.canvas, iPeriod, iPos)
+        self.canvas.cd()
+        self.canvas.Update()
+        self.canvas.RedrawAxis()
+        self.canvas.SaveAs(self.outputdir+'/c__'+self.prefix+self.xname+".pdf")
+        self.canvas.SetLogy()
+        self.canvas.SaveAs(self.outputdir+'/clogy__'+self.prefix+self.xname+".pdf")
+        self.canvas.SetLogy(0)
         ##--ratioplot
-        self.hratio=self.hdata.Clone()
+        self.hratio=self.hdata.Clone("hratio")
         self.hratio.Divide(self.hmc)
-        ##
-        pad1=ROOT.TPad("pad1", "pad1", 0, 0.3, 1, 1) ##x1,y1,x2,y2
-        pad1.SetTopMargin(0.1)
-        pad1.SetBottomMargin(0.02)
-        pad1.SetGridx()
-        pad1.Draw()
-        pad1.cd()
+        
+        self.pad1=ROOT.TPad("self.pad1", "self.pad1", 0, 0.3, 1, 1) ##x1,y1,x2,y2
+        self.pad1.SetTopMargin(0.1)
+        self.pad1.SetBottomMargin(0.02)
+        self.pad1.SetGridx()
+        self.pad1.Draw()
+        self.pad1.cd()
         self.hstack.Draw('hist')
         self.hdata.Draw('E1sames')
         
-        canvas.cd()
-        pad2=ROOT.TPad("pad2", "pad2", 0, 0.0, 1, 0.3)
-        pad2.SetTopMargin(0.02)
-        pad2.SetBottomMargin(0.2)
-        pad2.SetGridx()
-        pad2.Draw()
-        pad2.cd()
+        self.canvas.cd()
+        self.pad2=ROOT.TPad("self.pad2", "self.pad2", 0, 0.0, 1, 0.3)
+        self.pad2.SetTopMargin(0.02)
+        self.pad2.SetBottomMargin(0.2)
+        self.pad2.SetGridx()
+        self.pad2.Draw()
+        self.pad2.cd()
         ##TODO::handle this with input args
         self.hratio.SetMinimum(0.5)        
         self.hratio.SetMaximum(1.5)
@@ -213,22 +219,34 @@ class Drawer:
         #self.hratio.GetXaxis().SetTitle(self.xtitle)
         self.hratio.GetXaxis().SetTitleOffset(1)
         self.hratio.GetXaxis().SetTitleSize(0.09)
-
         self.hratio.Draw('E1sames')
         self.line1.Draw('sames')
-        CMS_lumi.CMS_lumi(canvas, iPeriod, iPos)
-        canvas.cd()
-        canvas.Update()
-        canvas.SaveAs(self.outputdir+'/'+self.prefix+self.xname+"_ratio.pdf")
-        pad1.cd()
-        pad1.SetLogy()
-        canvas.cd()
-        canvas.Update()
-        canvas.SaveAs(self.outputdir+'/'+self.prefix+self.xname+"_ratio_log.pdf")
-        del canvas
+        CMS_lumi.CMS_lumi(self.canvas, iPeriod, iPos)
+        self.canvas.cd()
+        self.canvas.Update()
+        self.canvas.SaveAs(self.outputdir+'/cratio__'+self.prefix+self.xname+".pdf")
+        self.pad1.cd()
+        self.pad1.SetLogy()
+        self.canvas.cd()
+        self.canvas.Update()
+        self.canvas.SaveAs(self.outputdir+'/cratiology__'+self.prefix+self.xname+"_ratio.pdf")
+        #del self.canvas
 
-        print "[OUTPUT]--->",self.outputdir
+        
+    def reset(self):
+        del self.hratio
+        del self.line1
+        del self.hdata
+        del self.hmc
+        del self.hstack
+        del self.hdict
+        del self.hempty
+        del self.chdict
+        del self.canvas
+        del self.pad1
+        del self.pad2
 if __name__ == '__main__':
+    print "start script",process.memory_info().rss  # in bytes
     parser = argparse.ArgumentParser(description='Plot configuration')
     ##---Example From SKFlat--##
     #parser.add_argument('-n', dest='NJobs', default=1, type=int)
@@ -257,16 +275,34 @@ if __name__ == '__main__':
     p=Plotter()
     #flist=glob("/data6/Users/jhchoi/SKFlatOutput/Run2UltraLegacy_v3/MYOUTPUT/test/BasicTest/2017/DATA/*.root")+\
     #glob("/data6/Users/jhchoi/SKFlatOutput/Run2UltraLegacy_v3/MYOUTPUT/test/BasicTest/2017/*.root")
-    hdict=p.GetHistFromFileList(plotconf['filelist'])
+    print "before get hist",process.memory_info().rss  # in bytes
+    hdict=p.GetHistPathFromFilePath(plotconf['inputpath'])
+    print "after get hist",process.memory_info().rss  # in bytes
     #outputdir=plotconf['outputdir']
     ##----Check Histogram List and Check xmin xmax----#
     xmin=sys.maxsize
     xmax=-sys.maxsize
+    iplot=0
+    drawer=Drawer()
+    drawer.SetPlotConfig(plotconf)
+    drawer.SetProcDict(procconf)
+    drawer.SetInputpath(plotconf['inputpath'])
     for c in hdict:
-        for v in hdict[c]:
-            print c,v
-            drawer=Drawer(hdict[c][v],procconf,'',c,v)
-            #    def SetNames(self,title,prefix,xname,yname):
-            drawer.SetPlotConfig(plotconf)
+        print c,
+        print "len(hdict[c])=",len(hdict[c])
+
+        for iplot,v in enumerate(hdict[c]):
+            #if iplot>5:continue
+            #if iplot!=11:continue
+            print iplot,c,v
+            print(process.memory_info().rss)  # in bytes
+            #def SetHistDict(self,_hdict):
+            #def SetProcDict(_pdict):
+            #def init(title,prefix,variablename):
+            
+            #drawer=Drawer(hdict[c][v],procconf,'',c,v)
+            drawer.SetHistDict(hdict[c][v])
+            drawer.init('',c,v)
             drawer.run()
+            drawer.reset()
             
