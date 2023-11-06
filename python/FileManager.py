@@ -2,6 +2,22 @@ import ROOT
 ###-Intro
 ##---This python class reads root files containing histograms whose path are
 ## /<cutname>/<variablename>/<processname_suffix>
+##---The class will have paths in the rootfile
+##   ->dict_hist[cut][variable][proc]==><>/<>/<> path
+
+
+##    fm=FileManager()
+##    fm.SetDirPath("BaiscCut/ZCand_Mass")
+##    fm.SetFilePath("/data6/Users/jhchoi/SKFlatRunlog/2023_09_07_163518__649621__BasicTest__Era2017__TAMSA1/SingleMuon_periodB/output/hists_14.root")
+##    fm.OpenHist()
+##    mydict=fm.ReturnHistDict()
+
+
+
+
+
+
+##---Old---##
 ##---The class will have its own dictionary objects 
 ##   ->dict_hist[cut][variable][proc]==>histogram obj.
 ##   ->It will scan all histograms under <>/<>/<> paths
@@ -23,10 +39,18 @@ class FileManager:
     def SetFileList(self, _filelist):
         for _path in _filelist:
             self.dict_file[_path]=None
-    def OpenHist(self):
+    def SetFilePath(self, _filepath):
+        #for _path in _filelist:
+        #    self.dict_file[_path]=None
+        self.filepath=_filepath
+    def OpenHist_List(self):
         for _path in self.dict_file:
             print "<<<<---Open File->",_path,"--->>>>"
             self.GetHistFromPath(_path)
+
+    def OpenHist(self):
+        print "<<<<---Open File->",self.filepath,"--->>>>"
+        self.GetHistFromPath(self.filepath)
     def GetHistFromPath(self,_path):
         ##---Scan all histograms
         _f=ROOT.TFile.Open(_path)
@@ -45,14 +69,16 @@ class FileManager:
                 _f.cd(_cvpath)
                 for _hkey in ROOT.gDirectory.GetListOfKeys():
                     _hname=_hkey.GetName()
+                    #print _hname
                     if not "TH" in _hkey.GetClassName() : continue
                     _hpath='/'.join([_cname,_vname,_hname])
-                    _h=_f.Get(_hpath)
-                    _h.SetDirectory(0)
-                    if _hname in self.dict_hist[_cname][_vname]: 
-                        self.dict_hist[_cname][_vname][_hname].Add(_h)
-                    else:
-                        self.dict_hist[_cname][_vname][_hname]=_h
+                    #_h=_f.Get(_hpath)
+                    #_h.SetDirectory(0)
+                    #if _hname in self.dict_hist[_cname][_vname]: 
+                    #    self.dict_hist[_cname][_vname][_hname].Add(_h)
+                    #else:
+                    #    self.dict_hist[_cname][_vname][_hname]=_h
+                    self.dict_hist[_cname][_vname][_hname]=_hpath
         _f.Close()
     def ReturnHistDict(self):
         return self.dict_hist
