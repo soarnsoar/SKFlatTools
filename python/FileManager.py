@@ -34,6 +34,7 @@ class FileManager:
     def __init__(self):
         #=Open Histogram Files 
         #=and Get the histogram and return them in dictionary form
+        self.dict_hist_short={}
         self.dict_hist={}
         self.dict_file={}
     def SetFileList(self, _filelist):
@@ -62,7 +63,15 @@ class FileManager:
             if not _cname in self.dict_hist: self.dict_hist[_cname]={}
             for _vkey in ROOT.gDirectory.GetListOfKeys():
                 _vname=_vkey.GetName()
-                if not "TDirectory" in _vkey.GetClassName():continue
+                if not "TDirectory" in _vkey.GetClassName():
+                    if "TH" in _vkey.GetClassName():
+                        ##--2step histo
+                        if not _cname in self.dict_hist_short:
+                            self.dict_hist_short[_cname]={}
+                        self.dict_hist_short[_cname][_vname]=_cname+"/"+_vname
+                        continue
+                    else:
+                        continue
                 #>>Add this variable to dict
                 if not _vname in self.dict_hist[_cname]: self.dict_hist[_cname][_vname]={}
                 _cvpath=_cname+"/"+_vname
@@ -82,6 +91,8 @@ class FileManager:
         _f.Close()
     def ReturnHistDict(self):
         return self.dict_hist
+    def ReturnHistDictShort(self):
+        return self.dict_hist_short
 if __name__ == '__main__':
     test=FileManager()
     test.SetFileList(["/data6/Users/jhchoi/SKFlatRunlog/2023_09_07_163518__649621__BasicTest__Era2017__TAMSA1/SingleMuon_periodB/output/hists_14.root"])
