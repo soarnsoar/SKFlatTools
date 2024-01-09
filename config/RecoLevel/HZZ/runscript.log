@@ -1,0 +1,102 @@
+281440256
+start script 281440256
+before get hist 281485312
+<<<<---Open File-> /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel/HZZ/skflatoutput/combine3yr.root --->>>>
+after get hist 295993344
+4e len(hdict[c])= 2
+0 4e 4lmass_final
+296001536
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4e__4lmass_final.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-2.820293)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4e__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4e__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4e__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4e__4lmass.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-2.825161)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4e__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4e__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4e__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4mu__4lmass_final.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-6.622715)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4mu__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4mu__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4mu__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4mu__HCand_mass.pdf has been created
+Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4mu__HCand_mass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4mu__HCand_mass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4mu__HCand_mass.pdf has been created
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Error in <TH1Merger::DifferentAxesMerge>: Cannot merge histograms - the histograms empty can extend the X axis or have different limits and underflows/overflows are present in the histogram 4mu/4lmass/GluGluToZZto4mu.
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4mu__4lmass.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-1.389488)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4mu__4lmass.pdf has been created
+Error in <TH1D::Divide>: Cannot divide histograms with different number of bins
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4mu__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4mu__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__event_start__cutflow.pdf has been created
+Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__event_start__cutflow.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__event_start__cutflow.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__event_start__cutflow.pdf has been created
+Info in <TH1D::Add>: Attempt to add histograms with different labels - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different labels - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TH1D::Add>: Attempt to add histograms with different number of bins - trying to use TH1::Merge
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__cutflow__all.pdf has been created
+Error in <THistPainter::PaintInit>: Cannot set Y axis to log scale
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__cutflow__all.pdf has been created
+Error in <TH1D::Divide>: Cannot divide histograms with different number of bins
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__cutflow__all.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__cutflow__all.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__mmee__4lmass_final.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-3.098853)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__mmee__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__mmee__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__mmee__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__mmee__4lmass.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-3.533108)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__mmee__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__mmee__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__mmee__4lmass.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//c__4l__4lmass_final.pdf has been created
+Error in <THistPainter::PaintInit>: log scale requested with a negative argument (-4.519531)
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//logy/clogy__4l__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio/cratio__4l__4lmass_final.pdf has been created
+Info in <TCanvas::Print>: pdf file /data6/Users/jhchoi/SKFlatAnalyzers/test/SKFlatAnalyzer/SKFlatTools/config/RecoLevel//HZZ/plots//ratio_logy/cratiology__4l__4lmass_final.pdf has been created
+1 4e 4lmass
+318087168
+4mu len(hdict[c])= 3
+0 4mu 4lmass_final
+318230528
+1 4mu HCand_mass
+318230528
+2 4mu 4lmass
+318279680
+event_start len(hdict[c])= 1
+0 event_start cutflow
+318476288
+cutflow len(hdict[c])= 1
+0 cutflow all
+318509056
+mmee len(hdict[c])= 2
+0 mmee 4lmass_final
+318509056
+1 mmee 4lmass
+318550016
+4l len(hdict[c])= 1
+0 4l 4lmass_final
+318570496
+OutTree len(hdict[c])= 0
